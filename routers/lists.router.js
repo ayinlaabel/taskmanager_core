@@ -1,5 +1,7 @@
 const express = require("express");
 
+const auth = require('../auth/index.auth');
+
 const router = express.Router();
 
 /**
@@ -11,9 +13,11 @@ const { List, Task } = require("../database/models");
  * Get /lists
  * @desc - This get all the lists
  */
-router.get("/", (req, res, next) => {
-  List.find({})
+router.get("/", auth.verifyToken, (req, res, next) => {
+  console.log(req.userId);
+  List.find({ _userId: req.userId })
     .then((lists) => {
+      
       res.send(lists);
     })
     .catch((err) => console.log(err));
@@ -23,11 +27,12 @@ router.get("/", (req, res, next) => {
  * POST /lists
  * @desc - This create a new list
  */
-router.post("/", (req, res, next) => {
+router.post("/", auth.verifyToken, (req, res, next) => {
   const title = req.body.title;
 
   let newList = new List({
     title,
+    _userId: req.userId
   });
 
   newList
@@ -40,13 +45,14 @@ router.post("/", (req, res, next) => {
  * Patch /lists/:id
  * @desc - This update the list by its unique _id
  */
-router.patch("/:id", (req, res, next) => {
+router.patch("/:id", auth.verifyToken, (req, res, next) => {
   /**
    * @desc This will update the document with the data send from the req.body
    */
 
   List.findOneAndUpdate(
-    { _id: req.params.id },
+    { _userId: req.userId,
+      _id: req.params.id },
     {
       $set: req.body,
     }
@@ -57,8 +63,9 @@ router.patch("/:id", (req, res, next) => {
  * Delete /lists/:id
  * @desc - This delete list by its unique _id
  */
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", auth.verifyToken, (req, res, next) => {
   List.findOneAndRemove({
+    _userId: req.userId,
     _id: req.params.id,
   })
     .then((listRemoved) => res.send(listRemoved))
@@ -73,7 +80,7 @@ router.delete("/:id", (req, res, next) => {
  * GET /lists/:listId/task
  * @desc - This get all task that belongs to a specific list
  */
-router.get("/:listId/tasks", (req, res, next) => {
+router.get("/:listId/tasks", auth.verifyToken, (req, res, next) => {
   Task.find({
     _listId: req.params.listId,
   })
@@ -85,7 +92,7 @@ router.get("/:listId/tasks", (req, res, next) => {
  * POST /lists/:listId/task
  * @desc - this create a new task for a specific list
  */
-router.post("/:listId/tasks", (req, res, next) => {
+router.post("/:listId/tasks", auth.verifyToken, (req, res, next) => {
   let newTask = new Task({
     _listId: req.params.listId,
     title: req.body.title,
