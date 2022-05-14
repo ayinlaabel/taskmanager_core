@@ -50,7 +50,7 @@ router.post('/login', (req, res, next) => {
                         if(!result){
                             res.send({message: "Wrong password, try again."})
                         }else{
-                            jwt.sign({userId: user._id}, 'envfile', (err, token)=>{
+                            jwt.sign({userId: user._id}, 'my-secret-to-login', (err, token)=>{
                                 if (err) throw err;
 
                                 res.send({token, user})

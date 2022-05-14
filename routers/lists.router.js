@@ -1,6 +1,6 @@
 const express = require("express");
 
-const auth = require('../auth/index.auth');
+const auth = require("../auth/index.auth");
 
 const router = express.Router();
 
@@ -14,11 +14,9 @@ const { List, Task } = require("../database/models");
  * @desc - This get all the lists
  */
 router.get("/", auth.verifyToken, (req, res, next) => {
-  console.log(req.userId);
   List.find({ _userId: req.userId })
     .then((lists) => {
-      
-      res.send(lists);
+      res.status(200).send(lists);
     })
     .catch((err) => console.log(err));
 });
@@ -32,12 +30,12 @@ router.post("/", auth.verifyToken, (req, res, next) => {
 
   let newList = new List({
     title,
-    _userId: req.userId
+    _userId: req.userId,
   });
 
   newList
     .save()
-    .then((list) => res.send(list))
+    .then((list) => res.status(201).send(list))
     .catch((err) => console.log(err));
 });
 
@@ -51,12 +49,11 @@ router.patch("/:id", auth.verifyToken, (req, res, next) => {
    */
 
   List.findOneAndUpdate(
-    { _userId: req.userId,
-      _id: req.params.id },
+    { _userId: req.userId, _id: req.params.id },
     {
       $set: req.body,
     }
-  ).then(() => res.sendStatus(200));
+  ).then(() => res.status(202));
 });
 
 /**
@@ -68,7 +65,7 @@ router.delete("/:id", auth.verifyToken, (req, res, next) => {
     _userId: req.userId,
     _id: req.params.id,
   })
-    .then((listRemoved) => res.send(listRemoved))
+    .then((listRemoved) => res.status(200).send(listRemoved))
     .catch((err) => console.log(err));
 });
 
@@ -85,6 +82,19 @@ router.get("/:listId/tasks", auth.verifyToken, (req, res, next) => {
     _listId: req.params.listId,
   })
     .then((tasks) => res.send(tasks))
+    .catch((err) => console.log(err));
+});
+
+/**
+ * GET /lists/:listId/task/:taskId
+ * @desc - This get single task that belongs to a specific listId and taskId
+ */
+ router.get("/:listId/tasks/:taskId", auth.verifyToken, (req, res, next) => {
+  Task.findOne({
+    _listId: req.params.listId,
+    _taskId: req.params.taskId,
+  })
+    .then((task) => res.status(200).send(task))
     .catch((err) => console.log(err));
 });
 
@@ -108,11 +118,11 @@ router.post("/:listId/tasks", auth.verifyToken, (req, res, next) => {
  * PATCH /lists/:listId/task/:taskId
  * @desc - This will update the task with the specific ID
  */
-router.patch("/:listId/tasks/:taskId", (req, res, next) => {
+router.patch("/:listId/tasks/:taskId", auth.verifyToken, (req, res, next) => {
   Task.findOneAndUpdate(
     {
-      _id: req.params.taskId,
       _listId: req.params.listId,
+      _id: req.params.taskId,
     },
     {
       $set: req.body,
@@ -124,7 +134,7 @@ router.patch("/:listId/tasks/:taskId", (req, res, next) => {
  * Delete /lists/:listId/task/:taskId
  * @desc - This delete task by its unique taskId and the listId
  */
-router.delete("/:listId/tasks/:taskId", (req, res, next) => {
+router.delete("/:listId/tasks/:taskId", auth.verifyToken, (req, res, next) => {
   Task.findOneAndRemove({
     _id: req.params.taskId,
     _listId: req.params.listId,
@@ -140,13 +150,17 @@ router.delete("/:listId/tasks/:taskId", (req, res, next) => {
  * GET /lists/:listId/task/:taskId
  * @desc - This get all task that belongs to a specific list
  */
-router.get("/lists/:listId/tasks/:taskId", (req, res, next) => {
-  Task.findOne({
-    _listId: req.params.listId,
-    _id: req.params.taskId,
-  })
-    .then((task) => res.send(task))
-    .catch((err) => console.log(err));
-});
+router.get(
+  "/lists/:listId/tasks/:taskId",
+  auth.verifyToken,
+  (req, res, next) => {
+    Task.findOne({
+      _listId: req.params.listId,
+      _id: req.params.taskId,
+    })
+      .then((task) => res.send(task))
+      .catch((err) => console.log(err));
+  }
+);
 
 module.exports = router;

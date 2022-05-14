@@ -1,23 +1,19 @@
 const jwt = require("jsonwebtoken");
 
 exports.verifyToken = function verifyToken(req, res, next) {
-  let bearerToken = req.headers["authorization"];
+  let token = req.headers["x-access-token"];
 
-  if (bearerToken !== undefined) {
-    let bearer = bearerToken.split(" ");
-
-    let token = bearer[1];
-
-    jwt.verify(token, "envfile", (err, decoded) => {
-      if (err){
-        //  res.send({message: 'Login action require.'}) 
-        res.sendStatus(403);
+  if (token) {
+    jwt.verify(token, "my-secret-to-login", (err, decoded) => {
+      if (err) {
+        //  res.send({message: 'Login action require.'})
+        res.status(403).send("You are require to login.");
       }
       req.userId = decoded.userId;
-    //   res.send({ decoded });
+      // res.send({ decoded });
       next();
     });
   } else {
-    res.sendStatus(403);
+    res.status(403).send({ message: "You need to login." });
   }
 };
