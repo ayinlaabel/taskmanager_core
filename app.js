@@ -1,12 +1,15 @@
 const express = require("express");
 const bodyParse = require("body-parser");
-
-const app = express();
-
 const { mongoose } = require("./database/mongoose");
 
 const listRouter = require("./routers/lists.router");
 const userRouter = require("./routers/user.router");
+
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+const app = express();
 
 /**
  * @desc - This are Middleware
@@ -36,6 +39,7 @@ app.use("/users", userRouter);
 /**
  * Coonection Port
  */
-app.listen(3000, () => {
-  console.log("Server is connected on port 3000...");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is connected on port ${port}...`);
 });

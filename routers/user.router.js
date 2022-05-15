@@ -2,6 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const router = express.Router();
 
 /**
@@ -50,7 +53,7 @@ router.post('/login', (req, res, next) => {
                         if(!result){
                             res.send({message: "Wrong password, try again."})
                         }else{
-                            jwt.sign({userId: user._id}, 'my-secret-to-login', (err, token)=>{
+                            jwt.sign({userId: user._id}, process.env.SECRET, (err, token)=>{
                                 if (err) throw err;
 
                                 res.send({token, user})
