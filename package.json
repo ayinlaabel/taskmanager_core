@@ -4,7 +4,7 @@
   "description": "This application handle a daily task.",
   "main": "app.js",
   "scripts": {
-    "start": "npm app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Krane Abel",
   "license": "MIT",
