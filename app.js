@@ -1,15 +1,17 @@
 const express = require("express");
+const webpush = require("web-push");
 const bodyParse = require("body-parser");
 const { mongoose } = require("./database/mongoose");
 
 const listRouter = require("./routers/lists.router");
 const userRouter = require("./routers/user.router");
-
+const notifyRouter = require("./routers/notify.router");
 
 const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
+
 
 /**
  * @desc - This are Middleware
@@ -35,6 +37,7 @@ app.use(function (req, res, next) {
 
 app.use("/lists", listRouter);
 app.use("/users", userRouter);
+app.use("/notification", notifyRouter);
 
 /**
  * Coonection Port

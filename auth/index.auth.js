@@ -11,9 +11,10 @@ exports.verifyToken = function verifyToken(req, res, next) {
       if (err) {
         //  res.send({message: 'Login action require.'})
         res.status(403).send("You are require to login.");
+      }else{
+        req.userId = decoded.userId;
+        // res.send({ decoded });
       }
-      req.userId = decoded.userId;
-      // res.send({ decoded });
       next();
     });
   } else {

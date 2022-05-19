@@ -1,8 +1,16 @@
 const express = require("express");
+const webpush = require("web-push");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const auth = require("../auth/index.auth");
 
 const router = express.Router();
+
+const vapidKeys = {
+  publicKey: process.env.VAPID_PUBLIC_KEY,
+  privateKey: process.env.VAPID_PRIVATE_KEY
+};
 
 /**
  * @desc - Import mongoose model
@@ -14,11 +22,67 @@ const { List, Task } = require("../database/models");
  * @desc - This get all the lists
  */
 router.get("/", auth.verifyToken, (req, res, next) => {
-  List.find({ _userId: req.userId })
-    .then((lists) => {
-      res.status(200).send(lists);
-    })
-    .catch((err) => console.log(err));
+  if (req.userId) {
+    // get client subscription config from db
+    const subscription = {
+      endpoint: "",
+      expirationTime: null,
+      keys: {
+        auth: "",
+        p256dh: "",
+      },
+    };
+
+    const payload = {
+      notification: {
+        title: "Title",
+        body: "This is my body",
+        icon: "assets/icons/icon-384x384.png",
+        actions: [
+          { action: "bar", title: "Focus last" },
+          { action: "baz", title: "Navigate last" },
+        ],
+        data: {
+          onActionClick: {
+            default: { operation: "openWindow" },
+            bar: {
+              operation: "focusLastFocusedOrOpen",
+              url: "/signin",
+            },
+            baz: {
+              operation: "navigateLastFocusedOrOpen",
+              url: "/signin",
+            },
+          },
+        },
+      },
+    };
+
+    const options = {
+      vapidDetails: {
+        subject: "mailto:example_email@example.com",
+        publicKey: vapidKeys.publicKey,
+        privateKey: vapidKeys.privateKey,
+      },
+      TTL: 60,
+    };
+
+    // send notification
+    webpush
+      .sendNotification(subscription, JSON.stringify(payload), options)
+      .then((_) => {
+        console.log("SENT!!!");
+        console.log(_);
+      })
+      .catch((_) => {
+        console.log(_);
+      });
+    List.find({ _userId: req.userId })
+      .then((lists) => {
+        res.status(200).send(lists);
+      })
+      .catch((err) => console.log(err));
+  }
 });
 
 /**
@@ -89,7 +153,7 @@ router.get("/:listId/tasks", auth.verifyToken, (req, res, next) => {
  * GET /lists/:listId/task/:taskId
  * @desc - This get single task that belongs to a specific listId and taskId
  */
- router.get("/:listId/tasks/:taskId", auth.verifyToken, (req, res, next) => {
+router.get("/:listId/tasks/:taskId", auth.verifyToken, (req, res, next) => {
   Task.findOne({
     _listId: req.params.listId,
     _taskId: req.params.taskId,
