@@ -1,12 +1,16 @@
 const express = require("express");
+const webpush = require("web-push");
 const bodyParse = require("body-parser");
-
-const app = express();
-
 const { mongoose } = require("./database/mongoose");
 
 const listRouter = require("./routers/lists.router");
 const userRouter = require("./routers/user.router");
+const notifyRouter = require("./routers/notify.router");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+const app = express();
 
 /**
  * @desc - This are Middleware
@@ -20,10 +24,7 @@ app.use(bodyParse.json());
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  res.header("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Methods", "*");
   next();
 });
@@ -35,10 +36,12 @@ app.use(function (req, res, next) {
 
 app.use("/lists", listRouter);
 app.use("/users", userRouter);
+app.use("/notification", notifyRouter);
 
 /**
  * Coonection Port
  */
-app.listen(3000, () => {
-  console.log("Server is connected on port 3000...");
+const port = 8080;
+app.listen(process.env.PORT || port, () => {
+  console.log(`Server is connected on port ${port}...`);
 });
