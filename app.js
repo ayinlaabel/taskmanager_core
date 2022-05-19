@@ -12,7 +12,6 @@ dotenv.config();
 
 const app = express();
 
-
 /**
  * @desc - This are Middleware
  */
@@ -42,7 +41,7 @@ app.use("/notification", notifyRouter);
 /**
  * Coonection Port
  */
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
+const port = 8080;
+app.listen(process.env.PORT || port, () => {
   console.log(`Server is connected on port ${port}...`);
 });
