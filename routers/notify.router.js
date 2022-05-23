@@ -6,27 +6,22 @@ dotenv.config();
 
 const { User, Notification } = require("../database/models/index");
 
-// webpush.setVapidDetails(
-//   "mailto:test@test.com",
-//   process.env.VAPID_PUBLIC_KEY,
-//   process.env.VAPID_PRIVATE_KEY
-// );
+webpush.setVapidDetails(
+  "mailto:test@test.com",
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 const router = express.Router();
 
-router.patch("/", (req, res, next) => {
-    User.findOneAndUpdate(
-      {
-        _userId: req._userId,
-      },
-      {
-        $set: req.body,
-      }
-    ).then((user) => {
-      res.status(200);
-    });
+router.post("/", (req, res, next) => {
+    const subscription = req.body;
 
-    console.log(user);
+    res.status(201).json({});
+
+    const payload = JSON.stringify({title: "Testing Notification."});
+
+    webpush.sendNotification(subscription, payload).catch(err => console.log(err));
 });
 
 module.exports = router;
