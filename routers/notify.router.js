@@ -4,7 +4,7 @@ const webpush = require("web-push");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { User, Notification } = require('../database/models/index')
+const { User, Notification } = require("../database/models/index");
 
 // webpush.setVapidDetails(
 //   "mailto:test@test.com",
@@ -19,16 +19,20 @@ router.patch("/", (req, res, next) => {
 
   console.log(req.body);
 
-  User.findOneAndUpdate({
-    _userId:req._userId
-  },
-  {
-    $set: req.body
-  }).then(
-    user => {
-      res.status(200);
+  User.findOne({ _id: req.userId }).then((user) => {
+    if (!user.notification) {
+      User.findOneAndUpdate(
+        {
+          _userId: req._userId,
+        },
+        {
+          $set: req.body,
+        }
+      ).then((user) => {
+        res.status(200);
+      });
     }
-  )
+  });
 });
 
 module.exports = router;
