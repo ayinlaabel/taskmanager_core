@@ -20,7 +20,7 @@ router.patch("/", (req, res, next) => {
   console.log(req.body);
 
   User.findOne({ _id: req.userId }).then((user) => {
-    if (user.notification) {
+    if (user['notification']) {
       console.log("push notification activated!")
     }else {
       User.findOneAndUpdate(
