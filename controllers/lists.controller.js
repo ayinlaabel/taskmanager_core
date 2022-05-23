@@ -47,8 +47,8 @@ exports.getList = (req, res, next) => {
     const options = {
       vapidDetails: {
         subject: "mailto:example_email@example.com",
-        publicKey: vapidKeys.publicKey,
-        privateKey: vapidKeys.privateKey,
+        publicKey: process.env.VAPID_PUBLIC_KEY,
+        privateKey: process.env.VAPID_PRIVATE_KEY,
       },
       TTL: 60,
     };

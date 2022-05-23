@@ -19,7 +19,7 @@ router.patch("/", (req, res, next) => {
 
   console.log(req.body);
 
-  User.findOne({ _id: req.userId }).then((user) => {
+  User.findOne({ _userId: req.userId }).then((user) => {
     if (user.notification !== null || user.notification !== undefined
       ) {
       console.log("push notification activated!")
@@ -35,6 +35,8 @@ router.patch("/", (req, res, next) => {
         res.status(200);
       });
     }
+
+    // console.log(user);
   });
 });
 
