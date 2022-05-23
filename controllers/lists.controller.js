@@ -6,64 +6,63 @@ dotenv.config();
 /**
  * @desc - Import mongoose model
  */
-const { List, Task } = require("../database/models");
+const { List, Task, User } = require("../database/models");
 
 exports.getList = (req, res, next) => {
   if (req.userId) {
+    let subscription = {};
     // get client subscription config from db
-    // const subscription = {
-    //   endpoint: "",
-    //   expirationTime: null,
-    //   keys: {
-    //     auth: "",
-    //     p256dh: "",
-    //   },
-    // };
+    User.findOne({ _id: req.userId}).then(
+      user =>{
+        subscription = user.notification;
+      }
+    )
+    
 
-    // const payload = {
-    //   notification: {
-    //     title: "Title",
-    //     body: "This is my body",
-    //     icon: "assets/icons/icon-384x384.png",
-    //     actions: [
-    //       { action: "bar", title: "Focus last" },
-    //       { action: "baz", title: "Navigate last" },
-    //     ],
-    //     data: {
-    //       onActionClick: {
-    //         default: { operation: "openWindow" },
-    //         bar: {
-    //           operation: "focusLastFocusedOrOpen",
-    //           url: "/signin",
-    //         },
-    //         baz: {
-    //           operation: "navigateLastFocusedOrOpen",
-    //           url: "/signin",
-    //         },
-    //       },
-    //     },
-    //   },
-    // };
+    const payload = {
+      notification: {
+        title: "Title",
+        body: "This is my body",
+        icon: "assets/icons/icon-384x384.png",
+        actions: [
+          { action: "bar", title: "Focus last" },
+          { action: "baz", title: "Navigate last" },
+        ],
+        data: {
+          onActionClick: {
+            default: { operation: "openWindow" },
+            bar: {
+              operation: "focusLastFocusedOrOpen",
+              url: "/signin",
+            },
+            baz: {
+              operation: "navigateLastFocusedOrOpen",
+              url: "/signin",
+            },
+          },
+        },
+      },
+    };
 
-    // const options = {
-    //   vapidDetails: {
-    //     subject: "mailto:example_email@example.com",
-    //     publicKey: vapidKeys.publicKey,
-    //     privateKey: vapidKeys.privateKey,
-    //   },
-    //   TTL: 60,
-    // };
+    const options = {
+      vapidDetails: {
+        subject: "mailto:example_email@example.com",
+        publicKey: vapidKeys.publicKey,
+        privateKey: vapidKeys.privateKey,
+      },
+      TTL: 60,
+    };
 
-    // // send notification
-    // webpush
-    //   .sendNotification(subscription, JSON.stringify(payload), options)
-    //   .then((_) => {
-    //     console.log("SENT!!!");
-    //     console.log(_);
-    //   })
-    //   .catch((_) => {
-    //     console.log(_);
-    //   });
+    // send notification
+    webpush
+      .sendNotification(subscription, JSON.stringify(payload), options)
+      .then((_) => {
+        console.log("SENT!!!");
+        console.log(_);
+      })
+      .catch((_) => {
+        console.log(_);
+      });
     List.find({ _userId: req.userId })
       .then((lists) => {
         res.status(200).send(lists);
