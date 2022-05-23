@@ -10,64 +10,63 @@ const { List, Task, User } = require("../database/models");
 
 exports.getList = (req, res, next) => {
   if (req.userId) {
-    let subscription = {};
+    let subscription;
     // get client subscription config from db
     User.findOne({ _id: req.userId}).then(
       user =>{
         subscription = user.notification;
-      }
-    )
-    
 
-    const payload = {
-      notification: {
-        title: "Title",
-        body: "This is my body",
-        icon: "assets/icons/icon-384x384.png",
-        actions: [
-          { action: "bar", title: "Focus last" },
-          { action: "baz", title: "Navigate last" },
-        ],
-        data: {
-          onActionClick: {
-            default: { operation: "openWindow" },
-            bar: {
-              operation: "focusLastFocusedOrOpen",
-              url: "/signin",
-            },
-            baz: {
-              operation: "navigateLastFocusedOrOpen",
-              url: "/signin",
+        const payload = {
+          notification: {
+            title: "Title",
+            body: "This is my body",
+            icon: "assets/icons/icon-384x384.png",
+            actions: [
+              { action: "bar", title: "Focus last" },
+              { action: "baz", title: "Navigate last" },
+            ],
+            data: {
+              onActionClick: {
+                default: { operation: "openWindow" },
+                bar: {
+                  operation: "focusLastFocusedOrOpen",
+                  url: "/signin",
+                },
+                baz: {
+                  operation: "navigateLastFocusedOrOpen",
+                  url: "/signin",
+                },
+              },
             },
           },
-        },
-      },
-    };
-
-    const options = {
-      vapidDetails: {
-        subject: "mailto:example_email@example.com",
-        publicKey: process.env.VAPID_PUBLIC_KEY,
-        privateKey: process.env.VAPID_PRIVATE_KEY,
-      },
-      TTL: 60,
-    };
-
-    // send notification
-    webpush
-      .sendNotification(subscription, JSON.stringify(payload), options)
-      .then((_) => {
-        console.log("SENT!!!");
-        console.log(_);
-      })
-      .catch((_) => {
-        console.log(_);
-      });
-    List.find({ _userId: req.userId })
-      .then((lists) => {
-        res.status(200).send(lists);
-      })
-      .catch((err) => console.log(err));
+        };
+    
+        const options = {
+          vapidDetails: {
+            subject: "mailto:example_email@example.com",
+            publicKey: process.env.VAPID_PUBLIC_KEY,
+            privateKey: process.env.VAPID_PRIVATE_KEY,
+          },
+          TTL: 60,
+        };
+    
+        // send notification
+        webpush
+          .sendNotification(subscription, JSON.stringify(payload), options)
+          .then((sub) => {
+            console.log("SENT!!!");
+            console.log(sub);
+          })
+          .catch((_) => {
+            console.log(_);
+          });
+        List.find({ _userId: req.userId })
+          .then((lists) => {
+            res.status(200).send(lists);
+          })
+          .catch((err) => console.log(err));
+      }
+    )
   }
 };
 
