@@ -15,7 +15,6 @@ const { User, Notification } = require("../database/models/index");
 const router = express.Router();
 
 router.patch("/", (req, res, next) => {
-  User.findOne({ _userId: req.userId }).then((user) => {
     User.findOneAndUpdate(
       {
         _userId: req._userId,
@@ -27,8 +26,7 @@ router.patch("/", (req, res, next) => {
       res.status(200);
     });
 
-    // console.log(user);
-  });
+    console.log(user);
 });
 
 module.exports = router;
