@@ -15,26 +15,17 @@ const { User, Notification } = require("../database/models/index");
 const router = express.Router();
 
 router.patch("/", (req, res, next) => {
-  const { endpoint, expirationTime, keys } = req.body;
-
-  console.log(req.body);
-
   User.findOne({ _userId: req.userId }).then((user) => {
-    if (user.notification !== null || user.notification !== undefined
-      ) {
-      console.log("push notification activated!")
-    }else {
-      User.findOneAndUpdate(
-        {
-          _userId: req._userId,
-        },
-        {
-          $set: req.body,
-        }
-      ).then((user) => {
-        res.status(200);
-      });
-    }
+    User.findOneAndUpdate(
+      {
+        _userId: req._userId,
+      },
+      {
+        $set: req.body,
+      }
+    ).then((user) => {
+      res.status(200);
+    });
 
     // console.log(user);
   });
