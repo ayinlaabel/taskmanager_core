@@ -22,6 +22,9 @@ app.use(bodyParse.json());
  * @desc - This middleware handle the cors origin error
  */
 
+// var cors = require("cors");
+// app.use(cors({ origin: true, credentials: true }));
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "*");
@@ -43,5 +46,5 @@ app.use("/notification", notifyRouter);
  */
 const port = 8080;
 app.listen(process.env.PORT || port, () => {
-  console.log(`Server is connected on port ${port}...`);
+  console.log(`Server is connected on port ${process.env.PORT || port}...`);
 });

@@ -1,19 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ListSchema = mongoose.Schema({
-    _userId:{
-        type: mongoose.Types.ObjectId,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true,
-        minlenght: 1,
-        trim: true
-
-    }
+  _userId: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+    minlenght: 1,
+    trim: true,
+  },
+  reminder: {
+    type: String,
+  },
 });
 
-const List = mongoose.model('List', ListSchema);
+const List = mongoose.model("List", ListSchema);
 
-module.exports = { List }
+module.exports = { List };

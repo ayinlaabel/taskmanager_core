@@ -28,9 +28,11 @@ exports.getSingleList = (req, res, next) => {
 
 exports.createList = (req, res, next) => {
   const title = req.body.title;
+  const reminder = req.body.reminder;
 
   let newList = new List({
     title,
+    reminder,
     _userId: req.userId,
   });
 
