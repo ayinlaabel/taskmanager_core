@@ -27,12 +27,13 @@ exports.getSingleList = (req, res, next) => {
 };
 
 exports.createList = (req, res, next) => {
-  const title = req.body.title;
-  const reminder = req.body.reminder;
+  const { title, reminder, reminderDate, reminderTime } = req.body;
 
   let newList = new List({
     title,
     reminder,
+    reminderDate,
+    reminderTime,
     _userId: req.userId,
   });
 

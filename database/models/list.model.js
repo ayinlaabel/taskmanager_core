@@ -15,7 +15,7 @@ const ListSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  remiderDate: {
+  reminderDate: {
     type: String,
   },
   reminderTime: {
