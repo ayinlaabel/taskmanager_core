@@ -62,8 +62,9 @@ exports.deleteList = (req, res, next) => {
     _id: req.params.id,
   })
     .then((listRemoved) => {
-      Task.deleteMany({ _listId: req.params.id });
-      res.status(200).send(listRemoved);
+      Task.deleteMany({ _listId: req.params.id }).then(() => {
+        res.status(200).send(listRemoved);
+      });
     })
     .catch((err) => console.log(err));
 };
