@@ -20,6 +20,6 @@ steps:
     
 
 - script: |
-    npm install
-    npm run build
+    installPackage: npm install
+    buildProject: npm run build
   displayName: 'npm install and build'
