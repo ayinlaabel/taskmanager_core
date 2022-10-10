@@ -10,83 +10,70 @@ on:
     branches: ["master"]
 
 jobs:
-  job 1:
-    build:
-      runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-      strategy:
-        matrix:
-          node-version: [14.x, 16.x, 18.x]
-          # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-          os: [ubuntu-latest, windows-latest, macOs-latest]
+        os: [ubuntu-latest, windows-latest, macOs-latest]
 
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-            cache: "npm"
-        - name: Make envfile
-          uses: SpicyPizza/create-envfile@v1.3
-          with:
-            envkey_DEBUG: false
-            VAPID_PUBLIC_KEY: "BI68hqfedr9KhYdnEGYbRKKUYj9ZcUMuxe2j_HmvQzgyXLE5GCPjB3CX8HSHGyWKPjfV0uVtYJbuHbmmqsYyhdI"
-            SECRET: "thisagoodsecret"
-            VAPID_PRIVATE_KEY: "aGWh2AMEP6spWq-_ThY5sWFaoDZ1xfza13enbrQtI2M"
-            file_name: .env
-            fail_on_empty: false
-        - run: npm ci
-        - run: npm run build --if-present
-        - run: npm test
-  job 2:
-    build:
-      runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DEBUG: false
+          VAPID_PUBLIC_KEY: "BI68hqfedr9KhYdnEGYbRKKUYj9ZcUMuxe2j_HmvQzgyXLE5GCPjB3CX8HSHGyWKPjfV0uVtYJbuHbmmqsYyhdI"
+          SECRET: "thisagoodsecret"
+          VAPID_PRIVATE_KEY: "aGWh2AMEP6spWq-_ThY5sWFaoDZ1xfza13enbrQtI2M"
+          file_name: .env
+          fail_on_empty: false
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+  windowsbuild:
+    runs-on: windows-latest
 
-      strategy:
-        matrix:
-          node-version: [14.x, 16.x, 18.x]
-          # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-          os: [ubuntu-latest, windows-latest, macOs-latest]
+        os: [ubuntu-latest, windows-latest, macOs-latest]
 
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-            cache: "npm"
-        - name: Make envfile
-          uses: SpicyPizza/create-envfile@v1.3
-          with:
-            envkey_DEBUG: false
-            VAPID_PUBLIC_KEY: "BI68hqfedr9KhYdnEGYbRKKUYj9ZcUMuxe2j_HmvQzgyXLE5GCPjB3CX8HSHGyWKPjfV0uVtYJbuHbmmqsYyhdI"
-            SECRET: "thisagoodsecret"
-            VAPID_PRIVATE_KEY: "aGWh2AMEP6spWq-_ThY5sWFaoDZ1xfza13enbrQtI2M"
-            file_name: .env
-            fail_on_empty: false
-        - run: npm ci
-        - run: npm run build --if-present
-        - run: npm test
-  job 3:
-    build:
-      runs-on: macOs-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+  macOSbuild:
+    runs-on: macOs-latest
 
-      strategy:
-        matrix:
-          node-version: [14.x, 16.x, 18.x]
-          # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-            cache: "npm"
-        - run: npm ci
-        - run: npm run build --if-present
-        - run: npm test
-  
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
