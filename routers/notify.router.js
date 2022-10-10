@@ -6,11 +6,11 @@ dotenv.config();
 
 const { User, Notification } = require("../database/models/index");
 
-webpush.setVapidDetails(
-  "mailto:test@test.com",
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+// webpush.setVapidDetails(
+//   "mailto:test@test.com",
+//   process.env.VAPID_PUBLIC_KEY,
+//   process.env.VAPID_PRIVATE_KEY
+// );
 
 const router = express.Router();
 
