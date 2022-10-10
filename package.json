@@ -4,7 +4,7 @@
   "description": "This application handle a daily task.",
   "main": "app.js",
   "scripts": {
-    "test": "npm run app.js"
+    "tp": "npm run app.js"
   },
   "author": "Krane Abel",
   "license": "MIT",
