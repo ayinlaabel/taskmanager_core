@@ -34,8 +34,8 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_DEBUG: false
-          envkey_VAPID_PUBLIC_KEY: "BI68hqfedr9KhYdnEGYbRKKUYj9ZcUMuxe2j_HmvQzgyXLE5GCPjB3CX8HSHGyWKPjfV0uVtYJbuHbmmqsYyhdI"
-          envkey_SECRET: "thisagoodsecret"
+          VAPID_PUBLIC_KEY: "BI68hqfedr9KhYdnEGYbRKKUYj9ZcUMuxe2j_HmvQzgyXLE5GCPjB3CX8HSHGyWKPjfV0uVtYJbuHbmmqsYyhdI"
+          SECRET: "thisagoodsecret"
           VAPID_PRIVATE_KEY: "aGWh2AMEP6spWq-_ThY5sWFaoDZ1xfza13enbrQtI2M"
           file_name: .env
           fail_on_empty: false
