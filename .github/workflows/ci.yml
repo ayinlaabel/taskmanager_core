@@ -22,11 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: SpicyPizza/create-envfile@v1.3
+      - uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_MONGODB_URI: ${{ secrets.MONGODB_URI }}
           envkey_SECRET: ${{ secrets.SECRET }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
