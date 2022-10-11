@@ -14,16 +14,16 @@ webpush.setVapidDetails(
 
 const router = express.Router();
 
-router.post("/", (req, res, next) => {
-  const subscription = req.body;
+// router.post("/", (req, res, next) => {
+//   const subscription = req.body;
 
-  res.status(201).json({});
+//   res.status(201).json({});
 
-  const payload = JSON.stringify({ title: "Testing Notification." });
+//   const payload = JSON.stringify({ title: "Testing Notification." });
 
-  webpush
-    .sendNotification(subscription, payload)
-    .catch((err) => console.log(err));
-});
+//   webpush
+//     .sendNotification(subscription, payload)
+//     .catch((err) => console.log(err));
+// });
 
 module.exports = router;
